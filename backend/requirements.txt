@@ -1,0 +1,5 @@
+Django>=6.1,<6.2
+djangorestframework>=3.17,<4
+google-re2>=1.1
+numpy>=2
+scipy>=1.14

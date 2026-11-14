@@ -1,7 +1,23 @@
 services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-insecure-dev-key}
+    volumes:
+      - db:/data/db
+      - corpus:/data/corpus
+    restart: unless-stopped
+
   frontend:
     build:
       context: ./frontend
     ports:
       - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      - backend
     restart: unless-stopped
+
+volumes:
+  db:
+  corpus:

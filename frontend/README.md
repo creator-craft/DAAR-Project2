@@ -26,9 +26,10 @@ docker run --rm -p 8080:80 daar-frontend
 The image uses the [official Nginx image](https://hub.docker.com/_/nginx) to
 serve `public/`, with no build dependencies. Files are copied into the image,
 so rebuild after edits. `/healthz` returns HTTP 200 and is used by Docker's
-health check. Unknown static paths return HTTP 404. Until backend integration
-is implemented, `/api/` returns HTTP 503 with a JSON `error` message; search
-and collection statistics are unavailable in this frontend-only container.
+health check. Unknown static paths return HTTP 404. `/api/` is proxied to the
+`backend` service of the Compose file; when it is unreachable (for example with
+the standalone commands above), Nginx answers HTTP 503 with a JSON `error`
+message.
 
 ## Preview without Docker
 
@@ -44,10 +45,8 @@ will display connection errors for those features.
 
 ## Backend integration
 
-Serve `public/` at `/` and expose the API on the same origin. The existing Django
-backend currently only defines `/admin/`; frontend migration does not change it.
-For Docker integration, replace the `/api/` placeholder in `nginx.conf` with a
-reverse proxy to the backend once it provides these endpoints.
+Nginx serves `public/` at `/` and proxies `/api/` to the Django backend on the
+same origin. The backend is described in the root [README](../README.md).
 
 - `GET /api/stats` returns `books`, `words`, `terms`, `graph` (boolean), and
   `corpus_ready` (boolean).
@@ -60,7 +59,10 @@ reverse proxy to the backend once it provides these endpoints.
   `similarity` (number).
 - Regex responses also include `matched_term_count` and `matched_terms` (an
   array of words).
-- API errors should use a non-success HTTP status and a JSON `error` message.
+- `matched_terms` lists at most 30 words (alphabetical), while `matched_term_count`
+  is the total number of matching indexed words. Expressions matching more than
+  5,000 words are rejected with an error.
+- API errors use a non-success HTTP status and a JSON `error` message.
 
 The interface includes keyword and regex search, ranking selection, pagination,
 recommendations, Gutenberg links, and responsive desktop/mobile layouts.
