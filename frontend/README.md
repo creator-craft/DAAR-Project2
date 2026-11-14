@@ -34,7 +34,7 @@ and collection statistics are unavailable in this frontend-only container.
 
 From the repository root:
 
-```powershell
+```sh
 python -m http.server 8080 --directory frontend/public
 ```
 

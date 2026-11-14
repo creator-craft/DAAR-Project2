@@ -1,6 +1,7 @@
 const $ = (selector) => document.querySelector(selector);
 const fmt = (n) => Number(n).toLocaleString();
 let page = 1;
+let totalPages = 0;
 let activeSearch = null;
 let requestNumber = 0;
 let controller = null;
@@ -33,7 +34,7 @@ function bookCard(book, index) {
   top.append(cover, info);
   const stats = element('div', 'card-stats');
   stats.append(element('span', '', `${fmt(book.occurrences)} occurrences`));
-  stats.append(element('span', '', `PageRank ${book.pagerank.toFixed(5)}`));
+  stats.append(element('span', '', typeof book.pagerank === 'number' ? `PageRank ${book.pagerank.toFixed(5)}` : 'PageRank pending'));
   const link = sourceLink(book, 'book-link');
   link.append(element('span', '', 'Open book on Gutenberg'), element('span', '', '↗'));
   card.append(top, stats, link);
@@ -66,12 +67,13 @@ function updateMode() {
   $('#search-hint').textContent = regex ? 'Find indexed words that match a regular expression.' : 'One word is all it takes. We search inside every indexed book.';
 }
 
-async function runSearch(newSearch = true) {
+async function runSearch(newSearch = true, targetPage = page) {
   if (newSearch) {
     const query = $('#query').value.trim();
     if (!query) { $('#query').focus(); return; }
     activeSearch = { q: query, mode: $('input[name="mode"]:checked').value, ranking: $('#ranking').value };
-    page = 1;
+    targetPage = 1;
+    totalPages = 0;
   }
   if (!activeSearch) return;
   const number = ++requestNumber;
@@ -86,26 +88,30 @@ async function runSearch(newSearch = true) {
   $('#pagination').hidden = true;
   $('#result-meta').textContent = '';
   try {
-    const response = await fetch(`/api/search?${new URLSearchParams({ ...activeSearch, page })}`, { signal: controller.signal });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Search failed. Please try again.');
+    const response = await fetch(`/api/search?${new URLSearchParams({ ...activeSearch, page: targetPage })}`, { signal: controller.signal });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) throw new Error((data && data.error) || 'Search failed. Please try again.');
+    if (!data || !Array.isArray(data.results)) throw new Error('Unexpected response from the library. Please try again.');
     if (number !== requestNumber) return;
+    page = targetPage;
     $('#results-heading').textContent = `Books connected to “${data.query}”`;
-    $('#result-meta').textContent = `${fmt(data.total)} results · ${fmt(data.elapsed_ms)} ms`;
+    $('#result-meta').textContent = `${fmt(data.total)} ${data.total === 1 ? 'result' : 'results'} · ${fmt(data.elapsed_ms)} ms`;
     $('#status').textContent = data.total ? '' : 'No books found. Try another word or a broader expression.';
     if (!data.graph_ready && data.total) $('#status').textContent = 'Graph not built yet: results use occurrence counts until PageRank is available.';
     $('#results').replaceChildren(...data.results.map((book, i) => bookCard(book, (page - 1) * data.page_size + i + 1)));
     if (data.mode === 'regex') {
       $('#matched-terms').hidden = false;
-      $('#matched-terms').textContent = `Matched ${fmt(data.matched_term_count)} indexed words: ${data.matched_terms.join(', ')}${data.matched_term_count > 30 ? ', …' : ''}`;
+      let terms = data.matched_terms || [];
+      $('#matched-terms').textContent = `Matched ${fmt(data.matched_term_count)} indexed words: ${terms.join(', ')}${data.matched_term_count > terms.length ? ', ...' : ''}`;
     }
-    const pages = Math.ceil(data.total / data.page_size);
-    $('#pagination').hidden = pages <= 1;
-    $('#page-label').textContent = `Page ${page} of ${pages}`;
+    totalPages = Math.ceil(data.total / data.page_size);
+    $('#pagination').hidden = totalPages <= 1;
+    $('#page-label').textContent = `Page ${page} of ${totalPages}`;
     $('#previous').disabled = page <= 1;
-    $('#next').disabled = page >= pages;
-    $('#recommendations-section').hidden = !data.recommendations.length;
-    $('#recommendations').replaceChildren(...data.recommendations.map((book) => {
+    $('#next').disabled = page >= totalPages;
+    const recommendations = data.recommendations || [];
+    $('#recommendations-section').hidden = !recommendations.length;
+    $('#recommendations').replaceChildren(...recommendations.map((book) => {
       const link = sourceLink(book, 'recommendation');
       link.append(element('h3', '', book.title), element('p', '', book.author),
         element('p', '', `${(book.similarity * 100).toFixed(1)}% word-frequency agreement with a top result ↗`));
@@ -116,6 +122,7 @@ async function runSearch(newSearch = true) {
     if (error.name === 'AbortError' || number !== requestNumber) return;
     $('#status').className = 'error';
     $('#status').textContent = error.message;
+    $('#pagination').hidden = totalPages <= 1;
   } finally {
     if (number === requestNumber) $('#results').setAttribute('aria-busy', 'false');
   }
@@ -130,8 +137,8 @@ document.querySelectorAll('[data-query]').forEach((button) => button.addEventLis
   runSearch();
 }));
 $('#ranking').addEventListener('change', () => { if (activeSearch) runSearch(); });
-$('#previous').addEventListener('click', () => { if (page > 1) { page--; runSearch(false); } });
-$('#next').addEventListener('click', () => { page++; runSearch(false); });
+$('#previous').addEventListener('click', () => { if (page > 1) runSearch(false, page - 1); });
+$('#next').addEventListener('click', () => { if (page < totalPages) runSearch(false, page + 1); });
 const initial = new URLSearchParams(location.search);
 if (initial.has('q')) {
   $('#query').value = initial.get('q').slice(0, 128);
