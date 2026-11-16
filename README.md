@@ -10,22 +10,53 @@ Install Docker with Compose, then:
 docker compose up --build -d
 ```
 
-Open http://localhost:8080.
-Set `FRONTEND_PORT` and `DJANGO_SECRET_KEY` in a root `.env` file (see `.env.example`).
+Open http://localhost:8080, or `http://<server address>:8080` from another machine of the same network.
 
-## Build the library
-
-You can copy existing book with:
+On the first start, the backend builds the library in the background: it downloads the corpus
+(about 760 MB, 7 minutes), then indexes it (about 2 minutes). The site answers during that time
+and shows the number of indexed books once the library is ready. Follow the progress with:
 
 ```sh
-docker compose cp ./my_books/. backend:/data/corpus
+docker compose logs -f backend
 ```
 
-Build the library index for each book named `<gutenberg id>.txt` in `backend/data/corpus`:
+The next starts reuse the `corpus` and `db` volumes. `docker compose down -v` deletes them.
+
+## Configuration
+
+Copy `.env.example` to `.env` to change the defaults. `.env` is ignored by Git and Docker.
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `FRONTEND_PORT` | `8080` | Port published on the host |
+| `DJANGO_SECRET_KEY` | development key | Secret key of Django |
+| `CORPUS_SIZE` | `1700` | Number of books downloaded on the first start |
+
+## Containers
+
+- `frontend` (Nginx) serves the static site and forwards `/api/` to `http://backend:8000`. It is the only published service.
+- `backend` (Django) publishes no port. It is reachable by its service name from the `library-net` bridge network only.
+- The `corpus` volume holds the downloaded books and the `db` volume holds the SQLite index.
+
+## Corpus
+
+The assignment requires at least 1664 books of at least 10,000 words each.
 
 ```sh
+docker compose exec backend python manage.py download_corpus
 docker compose exec backend python manage.py build_index
 ```
+
+- `download_corpus` reads the official Project Gutenberg catalog (`pg_catalog.csv.gz`) and takes the English
+  books by increasing identifier, so the corpus is reproducible. Project Gutenberg forbids robots on
+  www.gutenberg.org, so the catalog and the texts are fetched from mirrors (`--catalog`, `--mirror`).
+- A book is kept when its body is delimited by the Gutenberg markers and counts at least 10,000 words.
+  It is saved as `<gutenberg id>.txt` in `/data/corpus`. Rejected identifiers are remembered, so an
+  interrupted download resumes where it stopped.
+- `build_index` rebuilds the inverted index, the Jaccard graph and the PageRank from `/data/corpus`.
+
+Your own `<gutenberg id>.txt` files can be added with `docker compose cp ./my_books/. backend:/data/corpus`
+before running `build_index`.
 
 ## API
 

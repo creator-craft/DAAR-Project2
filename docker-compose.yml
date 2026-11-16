@@ -4,9 +4,12 @@ services:
       context: ./backend
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-insecure-dev-key}
+      CORPUS_SIZE: ${CORPUS_SIZE:-1700}
     volumes:
       - db:/data/db
       - corpus:/data/corpus
+    networks:
+      - library-net
     restart: unless-stopped
 
   frontend:
@@ -16,7 +19,14 @@ services:
       - "${FRONTEND_PORT:-8080}:80"
     depends_on:
       - backend
+    networks:
+      - library-net
     restart: unless-stopped
+
+# The backend publishes no port: it is only reachable by name from this network
+networks:
+  library-net:
+    driver: bridge
 
 volumes:
   db:
