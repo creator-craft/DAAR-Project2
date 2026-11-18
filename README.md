@@ -67,6 +67,35 @@ before running `build_index`.
 
 Errors are JSON: `{"error": "message"}` with a 4xx status.
 
+## Performance benchmark
+
+```sh
+make benchmark   # requires the indexed corpus and, on the host, `pip install matplotlib`
+```
+
+`python manage.py benchmark` draws nested random samples of the corpus (100, 200, 400, 800, 1200 books and
+the whole corpus, fixed seed `--seed 2026`). Each sample is indexed from scratch into a scratch SQLite file
+(`--database`, default `/tmp/benchmark.sqlite3`), so the library served by the site is not modified. It records
+the time of every indexing phase (parsing, posting inserts, Jaccard matrix, nearest neighbours, PageRank) and
+the size of the index in `indexing.csv`, then replays a fixed set of keyword and RegEx queries with both rankings
+(one warm-up, then `--repeat 5` timed runs each) and records every run in `queries.csv`.
+`docs/benchmark/plot.py` turns both files into the charts of the report and `summary.md`.
+
+`make stress` runs `docs/benchmark/stress.py` on the host: from 1 to 32 concurrent clients (8 for RegEx),
+it sends a fixed batch of searches through Nginx and records the throughput and the latency in `stress.csv`.
+
+## Relevance test
+
+```sh
+make relevance
+```
+
+`python manage.py relevance` uses the Project Gutenberg catalog downloaded with the corpus as reference:
+a book is relevant to a query when one of its Subjects or Bookshelves contains the query word. For 15 queries
+(5 topics labelled on at least 50 books, 10 on 10 to 30 books), it records the first 10 results of both rankings
+(`results.csv`), their precision, the precision of a random order of the same results and the precision of the
+recommendations (`summary.csv`). `docs/relevance/plot.py` draws the chart of the report and `summary.md`.
+
 ## How it works
 
 - **Index**: every word (letters only, 2–30 characters, lowercase) of the book body becomes a `Term`. A `Posting` stores its number of occurrences in a `Book`.

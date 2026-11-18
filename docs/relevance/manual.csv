@@ -1,0 +1,51 @@
+query,ranking,rank,book_id,title,label,manual,doubtful
+holmes,pagerank,1,883,Our Mutual Friend,0,0,0
+holmes,pagerank,2,359,Good Stories for Great Holidays Arranged for Story-Telling and Reading Aloud and for the Children's Own Reading,0,0,0
+holmes,pagerank,3,90,The Son of Tarzan,0,0,0
+holmes,pagerank,4,221,The Return of Sherlock Holmes,1,1,0
+holmes,pagerank,5,1832,The Case of the Lamp That Went Out,0,0,0
+holmes,frequency,1,221,The Return of Sherlock Holmes,1,1,0
+holmes,frequency,2,108,The Return of Sherlock Holmes,1,1,0
+holmes,frequency,3,834,The Memoirs of Sherlock Holmes,1,1,0
+holmes,frequency,4,515,Margret Howth: A Story of To-day,0,0,0
+holmes,frequency,5,446,A Book of Remarkable Criminals,0,0,0
+detective,pagerank,1,155,The Moonstone,1,1,0
+detective,pagerank,2,1627,The Evil Genius: A Domestic Story,0,0,1
+detective,pagerank,3,1586,Man and Wife,0,0,0
+detective,pagerank,4,1917,The Queen of Hearts,1,1,0
+detective,pagerank,5,1895,Armadale,0,0,1
+detective,frequency,1,2019,The Bat,1,1,0
+detective,frequency,2,1651,The Mystery of Orcival,1,1,0
+detective,frequency,3,1747,The Red Seal,0,1,0
+detective,frequency,4,1495,The Golf Course Mystery,1,1,0
+detective,frequency,5,1857,Initials Only,1,1,0
+love,pagerank,1,1622,The Law and the Lady,0,0,0
+love,pagerank,2,155,The Moonstone,0,0,0
+love,pagerank,3,1629,"""I Say No""",0,0,0
+love,pagerank,4,1627,The Evil Genius: A Domestic Story,0,0,0
+love,pagerank,5,700,The Old Curiosity Shop,0,0,0
+love,frequency,1,100,The Complete Works of William Shakespeare,0,0,1
+love,frequency,2,266,"Confessio Amantis; Or, Tales of the Seven Deadly Sins",1,1,0
+love,frequency,3,808,The Complete Plays of Gilbert and Sullivan,0,0,1
+love,frequency,4,1399,Anna Karenina,1,1,0
+love,frequency,5,615,Orlando Furioso,0,1,1
+chemistry,pagerank,1,1622,The Law and the Lady,0,0,0
+chemistry,pagerank,2,155,The Moonstone,0,0,0
+chemistry,pagerank,3,583,The Woman in White,0,0,0
+chemistry,pagerank,4,1895,Armadale,0,0,0
+chemistry,pagerank,5,1626,After Dark,0,0,0
+chemistry,frequency,1,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0,0,0
+chemistry,frequency,2,1708,A History of Science — Volume 4,1,1,0
+chemistry,frequency,3,505,History of the Warfare of Science with Theology in Christendom,0,0,1
+chemistry,frequency,4,1453,The Alkahest,0,0,1
+chemistry,frequency,5,661,The Gutenberg Webster's Unabridged Dictionary: Section C,0,0,0
+sargon,pagerank,1,30,"The Bible, King James Version, Complete",0,0,0
+sargon,pagerank,2,10,The King James Version of the Bible,0,0,0
+sargon,pagerank,3,1610,"The Bible, Douay-Rheims, Old Testament — Part 2",0,0,0
+sargon,pagerank,4,1581,"The Bible, Douay-Rheims, Complete",0,0,0
+sargon,pagerank,5,133,The Damnation of Theron Ware,0,0,0
+sargon,frequency,1,2030,Legends of Babylon and Egypt in Relation to Hebrew Tradition,1,1,0
+sargon,frequency,2,505,History of the Warfare of Science with Theology in Christendom,0,0,0
+sargon,frequency,3,1705,A History of Science — Volume 1,0,0,1
+sargon,frequency,4,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0,0,0
+sargon,frequency,5,2069,The Religion of Babylonia and Assyria,1,1,0

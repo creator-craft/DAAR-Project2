@@ -1,0 +1,61 @@
+query,ranking,rank,book_id,title,similarity,relevant
+holmes,pagerank,1,821,Dombey and Son,0.4953,0
+holmes,pagerank,2,766,David Copperfield,0.4944,0
+holmes,pagerank,3,963,Little Dorrit,0.49,0
+holmes,pagerank,4,1023,Bleak House,0.4816,0
+holmes,pagerank,5,968,Martin Chuzzlewit,0.4801,0
+holmes,pagerank,6,967,Nicholas Nickleby,0.4732,0
+holmes,frequency,1,537,Tales of Terror and Mystery,0.3998,0
+holmes,frequency,2,1976,Peter Ruff and the Double Four,0.3893,0
+holmes,frequency,3,583,The Woman in White,0.3819,0
+holmes,frequency,4,1917,The Queen of Hearts,0.3819,0
+holmes,frequency,5,155,The Moonstone,0.3817,0
+holmes,frequency,6,2038,The Lock and Key Library: Classic Mystery and Detective Stories: Modern English,0.3808,0
+detective,pagerank,1,1895,Armadale,0.4964,0
+detective,pagerank,2,1975,The Legacy of Cain,0.4957,0
+detective,pagerank,3,1438,No Name,0.4937,0
+detective,pagerank,4,1629,"""I Say No""",0.4892,0
+detective,pagerank,5,583,The Woman in White,0.4801,0
+detective,pagerank,6,1622,The Law and the Lady,0.4773,0
+detective,frequency,1,1748,Other People's Money,0.4389,1
+detective,frequency,2,547,Baron Trigault's Vengeance,0.4344,1
+detective,frequency,3,305,The Count's Millions,0.4337,1
+detective,frequency,4,2047,The Lock and Key Library: the Most Interesting Stories of All Nations: French Novels,0.4104,1
+detective,frequency,5,1257,The three musketeers,0.3977,0
+detective,frequency,6,1622,The Law and the Lady,0.3961,0
+love,pagerank,1,1975,The Legacy of Cain,0.4895,0
+love,pagerank,2,1627,The Evil Genius: A Domestic Story,0.4892,0
+love,pagerank,3,583,The Woman in White,0.48,1
+love,pagerank,4,1587,The Black Robe,0.4755,0
+love,pagerank,5,1895,Armadale,0.4709,0
+love,pagerank,6,1623,The New Magdalen,0.4703,0
+love,frequency,1,766,David Copperfield,0.3662,0
+love,frequency,2,967,Nicholas Nickleby,0.3652,0
+love,frequency,3,968,Martin Chuzzlewit,0.3649,0
+love,frequency,4,700,The Old Curiosity Shop,0.3639,0
+love,frequency,5,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0.3624,0
+love,frequency,6,821,Dombey and Son,0.3616,0
+chemistry,pagerank,1,1438,No Name,0.5022,0
+chemistry,pagerank,2,1895,Armadale,0.4975,0
+chemistry,pagerank,3,1586,Man and Wife,0.4801,0
+chemistry,pagerank,4,1627,The Evil Genius: A Domestic Story,0.4773,0
+chemistry,pagerank,5,1917,The Queen of Hearts,0.4756,0
+chemistry,pagerank,6,1975,The Legacy of Cain,0.4741,0
+chemistry,frequency,1,1706,A History of Science — Volume 2,0.3628,1
+chemistry,frequency,2,1707,A History of Science — Volume 3,0.3622,0
+chemistry,frequency,3,1705,A History of Science — Volume 1,0.3467,1
+chemistry,frequency,4,1349,Russia,0.3257,0
+chemistry,frequency,5,1468,"The History of England, from the Accession of James II — Volume 1",0.323,0
+chemistry,frequency,6,1185,History of the Conflict Between Religion and Science,0.3202,0
+sargon,pagerank,1,1581,"The Bible, Douay-Rheims, Complete",0.6377,0
+sargon,pagerank,2,1609,"The Bible, Douay-Rheims, Old Testament — Part 1",0.3961,0
+sargon,pagerank,3,124,Deuterocanonical Books of the Bible Apocrypha,0.3957,0
+sargon,pagerank,4,1582,"The Bible, Douay-Rheims, New Testament",0.3813,0
+sargon,pagerank,5,749,Barlaam and Ioasaph,0.3094,0
+sargon,pagerank,6,17,The Book of Mormon,0.3039,0
+sargon,frequency,1,1706,A History of Science — Volume 2,0.3637,0
+sargon,frequency,2,1707,A History of Science — Volume 3,0.3482,0
+sargon,frequency,3,1708,A History of Science — Volume 4,0.3467,0
+sargon,frequency,4,1349,Russia,0.3257,0
+sargon,frequency,5,1468,"The History of England, from the Accession of James II — Volume 1",0.323,0
+sargon,frequency,6,852,Democracy and Education: An Introduction to the Philosophy of Education,0.3203,0

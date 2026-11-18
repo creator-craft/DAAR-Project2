@@ -1,0 +1,301 @@
+query,group,ranking,rank,book_id,title,relevant
+adventure,popular,pagerank,1,1622,The Law and the Lady,0
+adventure,popular,pagerank,2,155,The Moonstone,0
+adventure,popular,pagerank,3,1629,"""I Say No""",0
+adventure,popular,pagerank,4,700,The Old Curiosity Shop,0
+adventure,popular,pagerank,5,583,The Woman in White,0
+adventure,popular,pagerank,6,1917,The Queen of Hearts,0
+adventure,popular,pagerank,7,766,David Copperfield,0
+adventure,popular,pagerank,8,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+adventure,popular,pagerank,9,1587,The Black Robe,0
+adventure,popular,pagerank,10,1895,Armadale,0
+adventure,popular,frequency,1,996,Don Quixote,0
+adventure,popular,frequency,2,1251,Le Morte d'Arthur: Volume 1,0
+adventure,popular,frequency,3,1252,Le Morte d'Arthur: Volume 2,0
+adventure,popular,frequency,4,1151,The Nibelungenlied,0
+adventure,popular,frequency,5,750,The High History of the Holy Graal,0
+adventure,popular,frequency,6,169,The Well at the World's End: A Tale,1
+adventure,popular,frequency,7,108,The Return of Sherlock Holmes,0
+adventure,popular,frequency,8,221,The Return of Sherlock Holmes,0
+adventure,popular,frequency,9,135,Les Misérables,0
+adventure,popular,frequency,10,318,John Barleycorn,0
+science,popular,pagerank,1,1622,The Law and the Lady,0
+science,popular,pagerank,2,155,The Moonstone,0
+science,popular,pagerank,3,700,The Old Curiosity Shop,0
+science,popular,pagerank,4,583,The Woman in White,0
+science,popular,pagerank,5,1586,Man and Wife,0
+science,popular,pagerank,6,1917,The Queen of Hearts,0
+science,popular,pagerank,7,766,David Copperfield,0
+science,popular,pagerank,8,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+science,popular,pagerank,9,1587,The Black Robe,0
+science,popular,pagerank,10,1895,Armadale,0
+science,popular,frequency,1,505,History of the Warfare of Science with Theology in Christendom,1
+science,popular,frequency,2,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0
+science,popular,frequency,3,1909,Darwin and Modern Science,1
+science,popular,frequency,4,1216,"Reflections on the Decline of Science in England, and on Some of Its Causes",1
+science,popular,frequency,5,852,Democracy and Education: An Introduction to the Philosophy of Education,0
+science,popular,frequency,6,1705,A History of Science — Volume 1,1
+science,popular,frequency,7,1185,History of the Conflict Between Religion and Science,1
+science,popular,frequency,8,2088,Life and Letters of Charles Darwin — Volume 2,1
+science,popular,frequency,9,2044,The Education of Henry Adams,0
+science,popular,frequency,10,1706,A History of Science — Volume 2,1
+philosophy,popular,pagerank,1,1622,The Law and the Lady,0
+philosophy,popular,pagerank,2,155,The Moonstone,0
+philosophy,popular,pagerank,3,1629,"""I Say No""",0
+philosophy,popular,pagerank,4,700,The Old Curiosity Shop,0
+philosophy,popular,pagerank,5,583,The Woman in White,0
+philosophy,popular,pagerank,6,1586,Man and Wife,0
+philosophy,popular,pagerank,7,766,David Copperfield,0
+philosophy,popular,pagerank,8,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+philosophy,popular,pagerank,9,1587,The Black Robe,0
+philosophy,popular,pagerank,10,1895,Armadale,0
+philosophy,popular,frequency,1,1497,The Republic,1
+philosophy,popular,frequency,2,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0
+philosophy,popular,frequency,3,852,Democracy and Education: An Introduction to the Philosophy of Education,1
+philosophy,popular,frequency,4,1347,A New Philosophy,1
+philosophy,popular,frequency,5,621,The Varieties of Religious Experience: A Study in Human Nature,1
+philosophy,popular,frequency,6,1735,Sophist,1
+philosophy,popular,frequency,7,150,The Republic,1
+philosophy,popular,frequency,8,1726,Theaetetus,1
+philosophy,popular,frequency,9,1909,Darwin and Modern Science,1
+philosophy,popular,frequency,10,360,What is Property? An Inquiry into the Principle of Right and of Government,1
+love,popular,pagerank,1,1622,The Law and the Lady,0
+love,popular,pagerank,2,155,The Moonstone,0
+love,popular,pagerank,3,1629,"""I Say No""",0
+love,popular,pagerank,4,1627,The Evil Genius: A Domestic Story,0
+love,popular,pagerank,5,700,The Old Curiosity Shop,0
+love,popular,pagerank,6,583,The Woman in White,1
+love,popular,pagerank,7,1586,Man and Wife,0
+love,popular,pagerank,8,1917,The Queen of Hearts,0
+love,popular,pagerank,9,766,David Copperfield,0
+love,popular,pagerank,10,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+love,popular,frequency,1,100,The Complete Works of William Shakespeare,0
+love,popular,frequency,2,266,"Confessio Amantis; Or, Tales of the Seven Deadly Sins",1
+love,popular,frequency,3,808,The Complete Plays of Gilbert and Sullivan,0
+love,popular,frequency,4,1399,Anna Karenina,1
+love,popular,frequency,5,615,Orlando Furioso,0
+love,popular,frequency,6,1365,The Complete Poetical Works of Henry Wadsworth Longfellow,0
+love,popular,frequency,7,1957,Beatrix,0
+love,popular,frequency,8,135,Les Misérables,0
+love,popular,frequency,9,1941,Letters of Two Brides,0
+love,popular,frequency,10,1569,The Lily of the Valley,1
+detective,popular,pagerank,1,155,The Moonstone,1
+detective,popular,pagerank,2,1627,The Evil Genius: A Domestic Story,0
+detective,popular,pagerank,3,1586,Man and Wife,0
+detective,popular,pagerank,4,1917,The Queen of Hearts,1
+detective,popular,pagerank,5,1895,Armadale,0
+detective,popular,pagerank,6,1438,No Name,0
+detective,popular,pagerank,7,1023,Bleak House,0
+detective,popular,pagerank,8,883,Our Mutual Friend,0
+detective,popular,pagerank,9,1095,The Light of the Western Stars,0
+detective,popular,pagerank,10,1628,My Lady's Money,1
+detective,popular,frequency,1,2019,The Bat,1
+detective,popular,frequency,2,1651,The Mystery of Orcival,1
+detective,popular,frequency,3,1747,The Red Seal,0
+detective,popular,frequency,4,1495,The Golf Course Mystery,1
+detective,popular,frequency,5,1857,Initials Only,1
+detective,popular,frequency,6,103,Around the World in Eighty Days,0
+detective,popular,frequency,7,2154,Around the World in Eighty Days. Junior Deluxe Edition,0
+detective,popular,frequency,8,434,The Circular Staircase,1
+detective,popular,frequency,9,1832,The Case of the Lamp That Went Out,1
+detective,popular,frequency,10,2172,That Mainwaring Affair,1
+rome,niche,pagerank,1,1622,The Law and the Lady,0
+rome,niche,pagerank,2,155,The Moonstone,0
+rome,niche,pagerank,3,1627,The Evil Genius: A Domestic Story,0
+rome,niche,pagerank,4,583,The Woman in White,0
+rome,niche,pagerank,5,1586,Man and Wife,0
+rome,niche,pagerank,6,1917,The Queen of Hearts,0
+rome,niche,pagerank,7,766,David Copperfield,0
+rome,niche,pagerank,8,1587,The Black Robe,0
+rome,niche,pagerank,9,967,Nicholas Nickleby,0
+rome,niche,pagerank,10,968,Martin Chuzzlewit,0
+rome,niche,frequency,1,674,Plutarch: Lives of the noble Grecians and Romans,1
+rome,niche,frequency,2,1396,"Rienzi, the Last of the Roman Tribunes",0
+rome,niche,frequency,3,731,History of the Decline and Fall of the Roman Empire — Volume 1,1
+rome,niche,frequency,4,100,The Complete Works of William Shakespeare,0
+rome,niche,frequency,5,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0
+rome,niche,frequency,6,733,History of the Decline and Fall of the Roman Empire — Volume 3,1
+rome,niche,frequency,7,890,History of the Decline and Fall of the Roman Empire — Volume 1,1
+rome,niche,frequency,8,736,History of the Decline and Fall of the Roman Empire — Volume 6,1
+rome,niche,frequency,9,895,History of the Decline and Fall of the Roman Empire — Volume 6,1
+rome,niche,frequency,10,734,History of the Decline and Fall of the Roman Empire — Volume 4,1
+fairy,niche,pagerank,1,1622,The Law and the Lady,0
+fairy,niche,pagerank,2,155,The Moonstone,0
+fairy,niche,pagerank,3,1627,The Evil Genius: A Domestic Story,0
+fairy,niche,pagerank,4,700,The Old Curiosity Shop,0
+fairy,niche,pagerank,5,766,David Copperfield,0
+fairy,niche,pagerank,6,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+fairy,niche,pagerank,7,821,Dombey and Son,0
+fairy,niche,pagerank,8,1438,No Name,0
+fairy,niche,pagerank,9,967,Nicholas Nickleby,0
+fairy,niche,pagerank,10,968,Martin Chuzzlewit,0
+fairy,niche,frequency,1,503,The Blue Fairy Book,1
+fairy,niche,frequency,2,163,Flower Fables,1
+fairy,niche,frequency,3,640,The Yellow Fairy Book,1
+fairy,niche,frequency,4,540,The Red Fairy Book,1
+fairy,niche,frequency,5,500,The Adventures of Pinocchio,1
+fairy,niche,frequency,6,325,Phantastes: A Faerie Romance for Men and Women,0
+fairy,niche,frequency,7,518,The Enchanted Island of Yew Whereon Prince Marvel Encountered the High Ki of Twi and Other Surprising People,0
+fairy,niche,frequency,8,1018,The Water-Babies,1
+fairy,niche,frequency,9,897,The Rose and the Ring,1
+fairy,niche,frequency,10,474,"How to Tell Stories to Children, and Some Stories to Tell",0
+scotland,niche,pagerank,1,1622,The Law and the Lady,0
+scotland,niche,pagerank,2,155,The Moonstone,0
+scotland,niche,pagerank,3,1629,"""I Say No""",0
+scotland,niche,pagerank,4,1627,The Evil Genius: A Domestic Story,0
+scotland,niche,pagerank,5,583,The Woman in White,0
+scotland,niche,pagerank,6,1586,Man and Wife,0
+scotland,niche,pagerank,7,1917,The Queen of Hearts,0
+scotland,niche,pagerank,8,766,David Copperfield,0
+scotland,niche,pagerank,9,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+scotland,niche,pagerank,10,1587,The Black Robe,0
+scotland,niche,frequency,1,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0
+scotland,niche,frequency,2,699,A Child's History of England,0
+scotland,niche,frequency,3,1586,Man and Wife,0
+scotland,niche,frequency,4,1468,"The History of England, from the Accession of James II — Volume 1",0
+scotland,niche,frequency,5,2034,"Waverley; or, 'Tis sixty years since",1
+scotland,niche,frequency,6,1564,"Boswell's Life of Johnson Abridged and edited, with an introduction by Charles Grosvenor Osgood",0
+scotland,niche,frequency,7,2170,Miscellaneous Writings and Speeches — Volume 4,0
+scotland,niche,frequency,8,1217,Penelope's Experiences in Scotland Being Extracts from the Commonplace Book of Penelope Hamilton,1
+scotland,niche,frequency,9,2160,The Expedition of Humphry Clinker,0
+scotland,niche,frequency,10,1279,Poems and Songs of Robert Burns,1
+horror,niche,pagerank,1,1622,The Law and the Lady,0
+horror,niche,pagerank,2,155,The Moonstone,0
+horror,niche,pagerank,3,1629,"""I Say No""",0
+horror,niche,pagerank,4,1627,The Evil Genius: A Domestic Story,0
+horror,niche,pagerank,5,700,The Old Curiosity Shop,0
+horror,niche,pagerank,6,583,The Woman in White,0
+horror,niche,pagerank,7,1586,Man and Wife,0
+horror,niche,pagerank,8,1917,The Queen of Hearts,0
+horror,niche,pagerank,9,766,David Copperfield,0
+horror,niche,pagerank,10,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+horror,niche,frequency,1,135,Les Misérables,0
+horror,niche,frequency,2,1399,Anna Karenina,0
+horror,niche,frequency,3,601,The Monk: A Romance,1
+horror,niche,frequency,4,452,"Lavengro: The Scholar, the Gypsy, the Priest",0
+horror,niche,frequency,5,84,"Frankenstein; or, The modern Prometheus",1
+horror,niche,frequency,6,450,Susan Lenox: Her Fall and Rise,0
+horror,niche,frequency,7,2148,The Works of Edgar Allan Poe — Volume 2,1
+horror,niche,frequency,8,1586,Man and Wife,0
+horror,niche,frequency,9,2043,The Lock and Key Library: The most interesting stories of all nations: American,0
+horror,niche,frequency,10,1560,The San Francisco Calamity by Earthquake and Fire,0
+magic,niche,pagerank,1,155,The Moonstone,0
+magic,niche,pagerank,2,1627,The Evil Genius: A Domestic Story,0
+magic,niche,pagerank,3,700,The Old Curiosity Shop,0
+magic,niche,pagerank,4,1586,Man and Wife,0
+magic,niche,pagerank,5,1917,The Queen of Hearts,0
+magic,niche,pagerank,6,766,David Copperfield,0
+magic,niche,pagerank,7,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+magic,niche,pagerank,8,1895,Armadale,0
+magic,niche,pagerank,9,821,Dombey and Son,0
+magic,niche,pagerank,10,1438,No Name,0
+magic,niche,frequency,1,419,The Magic of Oz,1
+magic,niche,frequency,2,961,"Glinda of Oz In Which Are Related the Exciting Experiences of Princess Ozma of Oz, and Dorothy, in Their Hazardous Journey to the Home of the Flatheads, and to the Magic Isle of the Skeezers, and How They Were Rescued from Dire Peril by the Sorcery of Glinda the Good",1
+magic,niche,frequency,3,959,The Lost Princess of Oz,1
+magic,niche,frequency,4,113,The Secret Garden,0
+magic,niche,frequency,5,505,History of the Warfare of Science with Theology in Christendom,0
+magic,niche,frequency,6,1271,Bygone Beliefs: Being a Series of Excursions in the Byways of Thought,1
+magic,niche,frequency,7,960,"The Tin Woodman of Oz A Faithful Story of the Astonishing Adventure Undertaken by the Tin Woodman, Assisted by Woot the Wanderer, the Scarecrow of Oz, and Polychrome, the Rainbow's Daughter",1
+magic,niche,frequency,8,38,"The Jargon File, Version 2.9.10, 01 Jul 1992",0
+magic,niche,frequency,9,958,Rinkitink in Oz Wherein Is Recorded the Perilous Quest of Prince Inga of Pingaree and King Rinkitink in the Magical Isles That Lie Beyond the Borderland of Oz,1
+magic,niche,frequency,10,517,The Emerald City of Oz,1
+engineering,niche,pagerank,1,1438,No Name,0
+engineering,niche,pagerank,2,883,Our Mutual Friend,0
+engineering,niche,pagerank,3,502,Desert Gold,0
+engineering,niche,pagerank,4,1641,The Lesser Bourgeoisie,0
+engineering,niche,pagerank,5,1976,Peter Ruff and the Double Four,0
+engineering,niche,pagerank,6,1401,Tarzan the Untamed,0
+engineering,niche,pagerank,7,1899,The Village Rector,0
+engineering,niche,pagerank,8,78,Tarzan of the Apes,0
+engineering,niche,pagerank,9,2166,King Solomon's Mines,0
+engineering,niche,pagerank,10,1878,A Millionaire of Yesterday,0
+engineering,niche,frequency,1,820,Edison: His Life and Inventions,1
+engineering,niche,frequency,2,404,Industrial Biography: Iron Workers and Tool Makers,0
+engineering,niche,frequency,3,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0
+engineering,niche,frequency,4,38,"The Jargon File, Version 2.9.10, 01 Jul 1992",1
+engineering,niche,frequency,5,79,Terminal Compromise,0
+engineering,niche,frequency,6,662,The Gutenberg Webster's Unabridged Dictionary: Section D and E,0
+engineering,niche,frequency,7,698,Memoir of Fleeming Jenkin,0
+engineering,niche,frequency,8,480,"""Undo"": A Novel",0
+engineering,niche,frequency,9,979,Heroes of the Telegraph,1
+engineering,niche,frequency,10,25,The 1991 CIA World Factbook,0
+knights,niche,pagerank,1,700,The Old Curiosity Shop,0
+knights,niche,pagerank,2,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+knights,niche,pagerank,3,1895,Armadale,0
+knights,niche,pagerank,4,821,Dombey and Son,0
+knights,niche,pagerank,5,967,Nicholas Nickleby,0
+knights,niche,pagerank,6,968,Martin Chuzzlewit,0
+knights,niche,pagerank,7,963,Little Dorrit,0
+knights,niche,pagerank,8,882,"Sketches by Boz, Illustrative of Every-Day Life and Every-Day People",0
+knights,niche,pagerank,9,128,The Arabian Nights Entertainments,0
+knights,niche,pagerank,10,640,The Yellow Fairy Book,0
+knights,niche,frequency,1,1252,Le Morte d'Arthur: Volume 2,0
+knights,niche,frequency,2,1251,Le Morte d'Arthur: Volume 1,0
+knights,niche,frequency,3,750,The High History of the Holy Graal,0
+knights,niche,frequency,4,1151,The Nibelungenlied,0
+knights,niche,frequency,5,996,Don Quixote,1
+knights,niche,frequency,6,831,Four Arthurian Romances,0
+knights,niche,frequency,7,378,The White Knight: Tirant Lo Blanc,1
+knights,niche,frequency,8,82,Ivanhoe: A Romance,1
+knights,niche,frequency,9,610,Idylls of the King,1
+knights,niche,frequency,10,86,A Connecticut Yankee in King Arthur's Court,1
+christmas,niche,pagerank,1,155,The Moonstone,0
+christmas,niche,pagerank,2,700,The Old Curiosity Shop,0
+christmas,niche,pagerank,3,1586,Man and Wife,0
+christmas,niche,pagerank,4,1917,The Queen of Hearts,0
+christmas,niche,pagerank,5,766,David Copperfield,0
+christmas,niche,pagerank,6,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+christmas,niche,pagerank,7,1895,Armadale,0
+christmas,niche,pagerank,8,821,Dombey and Son,0
+christmas,niche,pagerank,9,1438,No Name,0
+christmas,niche,pagerank,10,967,Nicholas Nickleby,0
+christmas,niche,frequency,1,429,"The Magic Egg, and Other Stories",0
+christmas,niche,frequency,2,359,Good Stories for Great Holidays Arranged for Story-Telling and Reading Aloud and for the Children's Own Reading,0
+christmas,niche,frequency,3,2048,The Sketch-Book of Geoffrey Crayon,0
+christmas,niche,frequency,4,46,A Christmas Carol in Prose; Being a Ghost Story of Christmas,1
+christmas,niche,frequency,5,1850,Old Christmas,1
+christmas,niche,frequency,6,721,The Birds' Christmas Carol,1
+christmas,niche,frequency,7,515,Margret Howth: A Story of To-day,0
+christmas,niche,frequency,8,752,A Young Girl's Diary,0
+christmas,niche,frequency,9,1467,Some Christmas Stories,1
+christmas,niche,frequency,10,824,Speeches: Literary and Social,0
+revolution,niche,pagerank,1,1622,The Law and the Lady,0
+revolution,niche,pagerank,2,1629,"""I Say No""",0
+revolution,niche,pagerank,3,583,The Woman in White,0
+revolution,niche,pagerank,4,766,David Copperfield,0
+revolution,niche,pagerank,5,1895,Armadale,0
+revolution,niche,pagerank,6,1438,No Name,0
+revolution,niche,pagerank,7,967,Nicholas Nickleby,0
+revolution,niche,pagerank,8,1023,Bleak House,0
+revolution,niche,pagerank,9,1975,The Legacy of Cain,0
+revolution,niche,pagerank,10,580,The Pickwick Papers,0
+revolution,niche,frequency,1,135,Les Misérables,0
+revolution,niche,frequency,2,1301,The French Revolution: A History,1
+revolution,niche,frequency,3,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0
+revolution,niche,frequency,4,2168,Miscellaneous Writings and Speeches — Volume 2,0
+revolution,niche,frequency,5,816,Democracy in America — Volume 2,0
+revolution,niche,frequency,6,1346,The Eighteenth Brumaire of Louis Bonaparte,1
+revolution,niche,frequency,7,754,The Story of Mankind,0
+revolution,niche,frequency,8,1326,The Crisis in Russia,0
+revolution,niche,frequency,9,2170,Miscellaneous Writings and Speeches — Volume 4,0
+revolution,niche,frequency,10,1164,The iron heel,0
+india,niche,pagerank,1,1622,The Law and the Lady,0
+india,niche,pagerank,2,155,The Moonstone,0
+india,niche,pagerank,3,1586,Man and Wife,0
+india,niche,pagerank,4,766,David Copperfield,0
+india,niche,pagerank,5,917,Barnaby Rudge: A Tale of the Riots of 'Eighty,0
+india,niche,pagerank,6,1587,The Black Robe,0
+india,niche,pagerank,7,821,Dombey and Son,0
+india,niche,pagerank,8,1438,No Name,0
+india,niche,pagerank,9,967,Nicholas Nickleby,0
+india,niche,pagerank,10,968,Martin Chuzzlewit,0
+india,niche,frequency,1,2056,"The Life of William Carey, Shoemaker & Missionary",1
+india,niche,frequency,2,200,"The Project Gutenberg Encyclopedia, Volume 1 of 28",0
+india,niche,frequency,3,2016,The 1998 CIA World Factbook,0
+india,niche,frequency,4,571,The 1995 CIA World Factbook,0
+india,niche,frequency,5,180,The 1994 CIA World Factbook,0
+india,niche,frequency,6,87,The 1993 CIA World Factbook,0
+india,niche,frequency,7,48,The 1992 CIA World Factbook,0
+india,niche,frequency,8,2170,Miscellaneous Writings and Speeches — Volume 4,0
+india,niche,frequency,9,25,The 1991 CIA World Factbook,0
+india,niche,frequency,10,1662,The 1997 CIA World Factbook,0
