@@ -69,29 +69,108 @@ L'application n'ayant qu'une seule vue et un seul utilisateur type, les histoire
 
 \subsection{Choix technologiques}
 
-L'application est composée de deux conteneurs Docker orchestrés par Docker Compose. Nginx sert les fichiers statiques du client et relaie les requêtes \code{/api/} vers le serveur Django. L'indexation est une étape hors ligne faite une seule fois après l'installation de la bibliothèque de livre désirée, cette étape construit le graphe de Jaccard et calcule le PageRank de chaque livre puis remplit la base SQLite à partir de ces données.
+L'application est composée de deux conteneurs Docker orchestrés par Docker Compose. Nginx sert les fichiers statiques du client et relaie les requêtes \texttt{/api/} vers le serveur Django. L'indexation est une étape hors ligne faite une seule fois après l'installation de la bibliothèque de livre désirée, cette étape construit le graphe de Jaccard et calcule le PageRank de chaque livre puis remplit la base SQLite à partir de ces données.
 
 Cette application utilise donc: Docker, Docker Compose, une base SQLite et les bibliothèques Python Google-re2, NumPy et SciPy (ces deux dernières pour assurer un calcul rapide des graphes).
 
-\subsection{Couche de données \ldots} % À voir si c'est utile, sinon suppimer
-
 % ---------------------------------------------------------------- ~3,5 pages
 \section{Algorithmes}
-% Pour chaque algorithme : définition du problème, structure de données,
-% état de l'art, justification des choix et critiques.
 
 \subsection{Index inversé et recherche par mot-clé}
 
+\paragraph{Problème.}
+Retrouver les livres qui contiennent un mot donné sans relire l'ensemble de tous les textes (largement plus de 17 millions de mots). L'index inversé~\cite{iir} répond à ce problème en associant à chaque mot du vocabulaire la liste des livres qui le contiennent, avec le nombre d'occurrences (liste de \emph{postings}).
+
+\paragraph{Structure de données.}
+Seul le corps de chaque livre est conservé, entre les marqueurs \texttt{START OF} et \texttt{END OF} de Gutenberg. Il est mis en minuscules puis découpé en mots, c'est-à-dire en suites de lettres (chiffres et tiret bas exclus) de 2 à 30 caractères. Il n'y a ni racinisation, ni suppression des mots vides. Chaque livre est ainsi réduit à une table de fréquences, stockée dans trois tables SQLite: \texttt{Term} (un mot, unique), \texttt{Book} (titre, auteur, nombre de mots, PageRank) et \texttt{Posting} (livre, mot, nombre d'occurrences). La colonne \texttt{word} étant unique, elle est indexée par un arbre B, de même que les clés étrangères de \texttt{Posting}. L'indexation parcourt chaque livre une seule fois en attribuant les identifiants de mots dans l'ordre de première apparition à l'aide d'un dictionnaire en mémoire, puis les postings du livre sont insérés d'un coup. Toute la reconstruction se fait dans une seule transaction, l'index est remplacé en entier ou pas du tout. Son coût est proportionnel au nombre de mots du corpus. Pour 1700 livres, l'index contient 485\,754 mots distincts et 11\,478\,622 postings.
+
+\paragraph{Recherche et classement.}
+Le mot saisi est mis en minuscules puis cherché tel quel dans \texttt{Term} (coût logarithmique en la taille du vocabulaire). Ses postings sont ensuite lus grâce à l'index de la clé étrangère \texttt{term}, puis sommés par livre. Le temps de recherche dépend donc du nombre de livres qui contiennent le mot, non de la taille du vocabulaire. Deux classements sont proposés, les mêmes pour la recherche par mot-clé et par RegEx, le classement \emph{par fréquence} qui correspond au nombre total d'occurrences décroissant, et le classement \emph{par PageRank} (section~\ref{sec:pagerank}) décroissant qui en cas d'égalité, détermine par nombre d'occurrences puis par identifiant. Tous les livres trouvés sont classés en mémoire et seuls les 9 livres de la page demandée sont ensuite utilisés.
+
+\paragraph{État de l'art, choix et critiques.}
+Les moteurs de recherche actuels (Lucene, Elasticsearch) reposent aussi sur un index inversé, mais stocké dans des fichiers spécialisés: listes de \texttt{postings} triées et compressées, positions des mots pour chercher des expressions, classement par TF-IDF ou BM25~\cite{iir}. Nous avons préféré une base relationnelle, plus simple à écrire et à interroger, dont les arbres B suffisent à répondre en quelques millisecondes (figure~\ref{fig:query-latency}). En contrepartie, l'index n'est ni compressé ni positionnel, et pèse environ 508~Mo pour 1700 livres. Trois limites en découlent. Une requête ne contient qu'un seul mot, car une requête de plusieurs mots est cherchée comme un mot unique, qui n'existe pas dans l'index. Il n'y a pas de racinisation, \texttt{telescope} ne trouve pas \texttt{telescopes}, ce que la recherche par RegEx permet de contourner. Enfin, le classement par fréquence compte les occurrences brutes sans tenir compte de la longueur du livre, ce qui favorise les livres longs.
+
 \subsection{Recherche avancée par expression régulière}
-% RE2 (temps linéaire) appliqué aux mots de l'index, et non au texte des livres.
+
+\paragraph{Problème.}
+Trouver les livres qui contiennent un mot reconnu par une expression régulière, et lister les mots reconnus. La RegEx doit reconnaître le mot en entier, sans tenir compte de la casse.
+
+\paragraph{Algorithme.}
+Plutôt que d'appliquer l'expression au texte des livres, nous l'appliquons au \emph{vocabulaire} de l'index (486\,000 mots distincts). Chaque mot distinct n'est testé qu'une seule fois, quel que soit le nombre de livres qui le contiennent. Le vocabulaire est lu par blocs de 50\,000 mots. Les identifiants des mots reconnus sont ensuite transmis à la même agrégation des postings que pour un mot-clé, une requête SQL par paquet de 500 identifiants (pour respecter la limite de variables de SQLite) somme les occurrences de chaque livre. Le score d'un livre est le total des occurrences de tous les mots reconnus. Les mots reconnus sont triés par ordre alphabétique et l'interface reçoit leur nombre et les 30 premiers. Le coût est proportionnel à la taille du vocabulaire, multipliée par le coût d'un test de mot, indépendamment de l'expression.
+
+\paragraph{État de l'art et choix.}
+Les moteurs d'expressions régulières à retour arrière (le module \texttt{re} de Python, PCRE) peuvent demander un temps exponentiel sur certaines expressions, comme \texttt{(a+)+b}, ce qui permet à un utilisateur de saturer le serveur. L'algorithme de Thompson simule à la place l'automate de l'expression et reconnaît un mot de longueur $n$ en $O(m\,n)$, avec $m$ la taille de l'expression~\cite{re2}. RE2, dont nous utilisons l'interface Python \texttt{google-re2}, l'implémente avec un automate déterministe construit à la demande et garantit un temps linéaire, au prix de la perte des références arrière et des assertions (\emph{lookahead}). Comme notre serveur exécute les expressions de n'importe quel utilisateur, cette garantie justifie le choix de RE2. Nous réduisons aussi la surface d'attaque, étant donné q'une requête fait au plus 128 caractères et ne peut contenir que des lettres, des chiffres et les symboles \texttt{.\ |\ (\ )\ *\ +\ ?\ [\ ]\ \^{}\ -}, ce qui exclut les échappements, les accolades et les groupes spéciaux. Enfin, une expression qui reconnaît plus de 5\,000 mots (par exemple \texttt{.*}) est refusée, avec le message \og expression trop large \fg, car il faudrait agréger les postings d'une grande partie du vocabulaire.
+
+\paragraph{Critiques.}
+Le balayage complet du vocabulaire est la limite principale: le temps d'une recherche par RegEx ne dépend presque pas de l'expression et croît avec le vocabulaire (figures~\ref{fig:query-latency} et~\ref{fig:query-scaling}). D'autres structures évitent ce balayage, comme l'index de trigrammes ou, dans Lucene, l'intersection de l'automate avec le dictionnaire des mots, que nous n'avons pas retenues pour des raisons de simplicité. Enfin, l'expression porte sur un mot isolé, on ne peut pas chercher une suite de mots, et la classe \texttt{[a-z]} ne reconnaît pas les lettres accentuées que contiennent certains mots du vocabulaire.
 
 \subsection{Graphe de Jaccard}
 
+\paragraph{Problème.}
+Mesurer la proximité de vocabulaire entre deux livres pour obtenir un graphe dont les sommets sont les livres, sur lequel on calcule le PageRank et on cherche des recommandations. L'indice de Jaccard~\cite{jaccard} de deux livres $a$ et $b$, dont $T_a$ et $T_b$ sont les ensembles de mots distincts, vaut
+\[
+    J(a,b) = \frac{|T_a \cap T_b|}{|T_a \cup T_b|} \in [0,1].
+\]
+Seule la présence d'un mot compte, non son nombre d'occurrences.
+
+\paragraph{Algorithme.}
+Soit $X$ la matrice creuse binaire à $n$ lignes (livres) et une colonne par mot du vocabulaire, avec $X_{a,t}=1$ si $t \in T_a$. Le produit $XX^{\top}$ donne toutes les intersections, $(XX^{\top})_{ab} = |T_a \cap T_b|$, et la somme des lignes de $X$ donne les tailles $|T_a|$. Comme $|T_a \cup T_b| = |T_a| + |T_b| - |T_a \cap T_b|$, un seul produit matriciel creux suffit à obtenir la matrice $J$ complète. On ne garde ensuite que, pour chaque livre, ses 10 plus proches voisins: la diagonale est exclue, une sélection partielle (\texttt{argpartition}) évite de trier chaque ligne en entier, et les arêtes de similarité nulle sont ignorées. Le graphe obtenu est \emph{orienté} et pondéré par $J$, l'arête $a \to b$ existe si $b$ est l'un des 10 livres les plus proches de $a$, sans que l'inverse soit vrai. Il compte au plus $10n$ arêtes (17\,000 pour 1700 livres), stockées dans la table \texttt{Similarity} lors de l'indexation.
+
+\paragraph{Exemple.}
+Le corpus de test du projet compte 4 livres. Chacun contient les mêmes 10 mots courants (\texttt{the}, \texttt{and}, \texttt{of}\ldots) et 4 à 6 mots propres. \emph{Sea Tales} et \emph{Deep Water} partagent \texttt{ocean}, \texttt{sea}, \texttt{ship} et les 10 mots courants, soit 13 mots communs sur $14+14-13=15$ mots au total: $J=13/15\approx 0{,}867$. Les autres valeurs sont dans le tableau~\ref{tab:jaccard} et comme il n'y a que 4 livres, chacun a 3 voisins et le graphe est complet.
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{lcccc}
+        \toprule
+        & Sea Tales & Deep Water & Star Road & Red Planet \\
+        \midrule
+        Sea Tales  & 1 & \tild & \tild & \tild \\
+        Deep Water & 0,867 & 1 & \tild & \tild \\
+        Star Road  & 0,579 & 0,579 & 1 & \tild \\
+        Red Planet & 0,556 & 0,556 & 0,667 & 1 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Similarités de Jaccard du corpus d'exemple (la diagonale n'est pas retenue comme arête).}
+    \label{tab:jaccard}
+\end{table}
+
+\paragraph{État de l'art, choix et critiques.}
+Pour comparer des documents, la recherche d'information utilise le plus souvent le cosinus de vecteurs TF-IDF, qui tient compte des fréquences, et, pour les très grands corpus, des estimations de Jaccard par signatures (\emph{shingling}, MinHash)~\cite{iir}. Nous avons gardé Jaccard sur des ensembles de mots, car il est borné, ne dépend pas de la répétition des mots, et se calcule avec un seul produit matriciel creux. Garder les 10 plus proches voisins plutôt que toutes les paires donne un graphe creux de degré sortant fixe, soit $10n$ arêtes au lieu de $n^2$, de plus, le PageRank reste linéaire en $n$ et la table reste petite. Cependant, le calcul de la matrice $J$ est en $O(n^2)$ en temps et en mémoire, car la matrice est dense (23~Mo pour 1700 livres en flottants 64 bits, sans compter les copies temporaires). C'est l'étape qui limite le passage à l'échelle (figure~\ref{fig:graph-scaling}) puisqu'au-delà de quelques dizaines de milliers de livres, il faudrait des signatures MinHash. La mesure elle-même a deux défauts. Les mots courants, présents dans tous les livres, gonflent l'intersection et resserrent les similarités (de 0,30 à 0,64 pour les voisins observés lors de nos tests). Et lorsqu'un petit livre est inclus dans un gros, leur indice de Jaccard est faible, car il est borné par le rapport de leurs vocabulaires.
+
 \subsection{Classement par PageRank}
-% Obligatoire : définition, algorithme implémenté (itération de la puissance),
-% et exemples de calcul sur des échantillons bien choisis du corpus.
+\label{sec:pagerank}
+
+\paragraph{Définition.}
+PageRank~\cite{pagerank} est la probabilité de présence d'un surfeur aléatoire sur le graphe. À chaque pas, avec la probabilité $d=0{,}85$, il suit une arête sortante choisie proportionnellement à son poids et avec la probabilité $1-d$, il saute vers un livre tiré uniformément. Soit $W_{ab} = J(a,b)$ si l'arête $a \to b$ existe et $0$ sinon, et $P_{ab} = W_{ab} / \sum_c W_{ac}$ la probabilité de passer de $a$ à $b$. Le vecteur PageRank $r$ est l'unique solution de
+\[
+    r = d\,P^{\top} r + \frac{1-d}{n}\,\mathbf{1}, \qquad \textstyle\sum_a r_a = 1 .
+\]
+Le saut aléatoire rend la chaîne irréductible et apériodique, d'où l'existence et l'unicité de $r$.
+
+\paragraph{Algorithme implémenté.}
+Nous utilisons l'itération de la puissance. On part de $r^{(0)}_a = 1/n$, puis on calcule $r^{(k+1)} = d\,P^{\top} r^{(k)} + \frac{1-d}{n}\mathbf{1}$, normalisé pour que sa somme soit 1. L'itération s'arrête quand $\lVert r^{(k+1)} - r^{(k)}\rVert_1 < 10^{-10}$, ou au bout de 200 itérations. $P$ est une matrice creuse SciPy dont une itération coûte $O(|E|) = O(10n)$. L'erreur diminuant au moins comme $d^k$, il faut au plus $\ln 10^{-10} / \ln 0{,}85 \approx 142$ itérations et le plafond de 200 n'est donc qu'une sécurité supplémentaire. Un livre sans arête sortante ferait perdre de la masse de probabilité, que la normalisation redistribue proportionnellement aux scores, alors que le PageRank standard la répartit uniformément. Ce cas ne se produit pas en pratique, comme tous les livres anglais partagent des mots courants, et chaque livre a donc bien 10 arêtes sortantes (17\,000 arêtes pour 1700 livres). Le PageRank est calculé une seule fois, à la fin de l'indexation, et stocké dans la colonne \texttt{Book.pagerank} afin q'une recherche n'ai plus qu'à le lire.
+
+\paragraph{Exemples de calcul.}
+Le plus petit graphe qui illustre l'effet de la structure est celui du test unitaire du projet contenant trois livres $b_0, b_1, b_2$ et les arêtes $b_0 \to b_2$, $b_1 \to b_2$ et $b_2 \to b_0$, toutes de poids 1. Personne ne pointe vers $b_1$, ce livre ne reçoit donc que le saut aléatoire et $r_1 = (1-d)/3 = 0{,}05$. Les deux autres équations s'écrivent $r_0 = 0{,}05 + 0{,}85\,r_2$ et $r_2 = 0{,}05 + 0{,}85\,(r_0 + r_1)$, d'où $r_2 = 0{,}135 / 0{,}2775 \approx 0{,}4865$ et $r_0 \approx 0{,}4635$ (somme égale à 1). Le livre $b_2$, vers lequel pointent deux livres, est le mieux classé. En partant de $(\tfrac13, \tfrac13, \tfrac13)$, l'itération donne $(0{,}333;\ 0{,}05;\ 0{,}617)$, $(0{,}574;\ 0{,}05;\ 0{,}376)$, $(0{,}370;\ 0{,}05;\ 0{,}581)$, \ldots : elle oscille à cause du cycle $b_0 \leftrightarrow b_2$ et ne passe sous le seuil de $10^{-10}$ qu'à la 140\textsuperscript{e} itération, ce qui correspond à la borne théorique.
+
+Sur le graphe complet du corpus de test (tableau~\ref{tab:jaccard}), PageRank converge en 17 itérations vers $(0{,}2615;\ 0{,}2615;\ 0{,}2413;\ 0{,}2358)$ pour \emph{Sea Tales}, \emph{Deep Water}, \emph{Star Road} et \emph{Red Planet}. Les deux livres de mer, très proches l'un de l'autre, reçoivent les scores les plus élevés. Sur le vrai corpus, le même mécanisme est visible dans les tests de pertinence. Pour la requête \texttt{holmes} classée par PageRank, les trois premiers résultats comprennent \emph{Our Mutual Friend}, et les recommandations qui en sont issues sont six romans de Dickens dont la similarité va de 0,47 à 0,50.
+
+\paragraph{État de l'art, choix et critiques.}
+Sur le Web, PageRank suppose qu'un lien est un vote, une page importante est une page que d'autres pages importantes citent. Notre graphe n'est pas composé de liens écrits par des auteurs, mais de similarités calculées dont chaque arête $a \to b$ signifie que $b$ est proche de $a$, et non que $a$ recommande $b$. PageRank mesure donc ici la centralité d'un livre dans le graphe des voisins, c'est-à-dire à quel point son vocabulaire est partagé avec ceux des autres livres. D'autres mesures de centralité existent (degré entrant, intermédiarité, vecteur propre) et nous avons retenu PageRank, qui est une centralité de vecteur propre amortie, parce que l'énoncé le demande, qu'il se calcule en quelques millisecondes sur un graphe creux et qu'il converge toujours grâce au saut aléatoire. Sa critique principale est qu'il ne dépend pas de la requête et ainsi que parmi les livres qui contiennent le mot recherché, il place en tête les plus centraux, non les plus pertinents, ce qui explique les résultats des tests (figure~\ref{fig:relevance-results}).
 
 \subsection{Recommandations}
+
+\paragraph{Problème.}
+Proposer, avec les résultats d'une recherche, des livres proches des meilleurs d'entre eux, même s'ils ne contiennent pas le mot recherché.
+
+\paragraph{Algorithme.}
+Les \emph{graines} sont les 3 premiers livres du classement choisi par l'utilisateur, pris sur l'ensemble des résultats et non sur la seule page affichée. Les candidats sont les cibles des arêtes sortantes des graines dans le graphe de Jaccard, graines exclues (au plus $3 \times 10 = 30$ livres). Si un candidat est voisin de plusieurs graines, on retient sa plus grande similarité. Les candidats sont triés par similarité décroissante, puis par identifiant, et les 6 premiers sont renvoyés avec leur similarité. Tout le travail est fait par une seule requête SQL (\texttt{WHERE source IN graines}, \texttt{GROUP BY target}, \texttt{MAX(similarity)}, \texttt{LIMIT 6}) sur le graphe calculé à l'indexation et son coût ne dépend donc pas de la taille de la bibliothèque. Sur le corpus de test, la recherche de \texttt{ocean} classée par fréquence renvoie \emph{Sea Tales} (9 occurrences) puis \emph{Deep Water} (3), ce sont les graines, et les candidats sont \emph{Star Road} ($J=0{,}579$, voisin des deux graines) puis \emph{Red Planet} ($J=0{,}556$), qui sont donc recommandés dans cet ordre.
+
+\paragraph{État de l'art, choix et critiques.}
+Il s'agit d'une recommandation par le contenu, elle repose sur la ressemblance des livres, par opposition au filtrage collaboratif, qui exploite l'historique des utilisateurs et que nous ne pouvons pas appliquer faute de données. Nous avons réutilisé le graphe déjà construit, ce qui n'ajoute aucun coût au moment de la recherche. Les nombres de graines (3) et de recommandations (6) sont fixés dans le code, sans optimisation. La qualité des recommandations dépend entièrement des graines, tant et si bien que si les premiers résultats sont mal choisis, comme avec PageRank, les recommandations le sont aussi (figure~\ref{fig:relevance-recommendations}). De plus, seules les arêtes sortantes des graines sont suivies, et la similarité porte sur le vocabulaire, non sur le thème et enfin, les recommandations ne sont pas diversifiées, et peuvent donc être des livres très semblables entre eux.
+
 
 % ---------------------------------------------------------------- ~4 pages
 \section{Tests}
