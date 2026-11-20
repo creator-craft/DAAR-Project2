@@ -37,13 +37,43 @@
 \maketitle
 
 \begin{abstract}
-    \noindent Ce rapport présente un site web de recherche de livres \ldots
+    \noindent Ce rapport présente une application web de recherche dans une bibliothèque de livres du Projet Gutenberg. Elle offre une recherche par mot-clé ou par expression régulière pouvant classer les résultats par fréquence ou par PageRank sur un graphe de Jaccard, et une recommandation de livres proches. Ce rapport définit chaque problème, rappelle l'état de l'art, justifie les choix d'implémentation, décrit la méthodologie de test et discute les limites de la solution.
 \end{abstract}
 
 % ---------------------------------------------------------------- ~1,5 page
 \section{Introduction et architecture}
 % Objectifs, user stories, architecture (Nginx + Django + SQLite, réseau Docker,
 % volumes), couche de données : tables Book / Term / Posting / Similarity.
+
+\subsection{Objectifs}
+
+L'énoncé~\cite{enonce} demande une application web permettant de retrouver des documents dans une bibliothèque d'au moins 1664 livres de plus de $10^4$ mots chacun. Quatre fonctionnalités sont essentielles à cette application:
+\begin{itemize}
+    \item La \emph{recherche} par mot-clé.
+    \item La \emph{recherche avancée} par expression régulière.
+    \item Le \emph{classement} des résultats, au moins par une mesure de centralité.
+    \item La \emph{recommandation} de documents proches de la dernière recherche.
+\end{itemize}
+
+\subsection{Histoires utilisateur}
+
+L'application n'ayant qu'une seule vue et un seul utilisateur type, les histoires suivantes se font du point de vue du \texttt{lecteur}.
+
+\begin{enumerate}
+    \item Je saisis un mot et j'obtiens les livres qui le contiennent avec les plus pertinents en premier.
+    \item Je saisis une expression régulière et j'obtiens les livres contenant un mot qui la satisfait, ainsi que la liste des mots correspondants.
+    \item Je choisis l'ordre de présentation par PageRank ou par nombre d'occurrences et vois l'affichage changer selon mon choix.
+    \item Je vois, avec les résultats, des livres au vocabulaire proche des meilleurs résultats.
+    \item J'utilise l'application depuis un téléphone ou un autre ordinateur du réseau local.
+\end{enumerate}
+
+\subsection{Choix technologiques}
+
+L'application est composée de deux conteneurs Docker orchestrés par Docker Compose. Nginx sert les fichiers statiques du client et relaie les requêtes \code{/api/} vers le serveur Django. L'indexation est une étape hors ligne faite une seule fois après l'installation de la bibliothèque de livre désirée, cette étape construit le graphe de Jaccard et calcule le PageRank de chaque livre puis remplit la base SQLite à partir de ces données.
+
+Cette application utilise donc: Docker, Docker Compose, une base SQLite et les bibliothèques Python Google-re2, NumPy et SciPy (ces deux dernières pour assurer un calcul rapide des graphes).
+
+\subsection{Couche de données \ldots} % À voir si c'est utile, sinon suppimer
 
 % ---------------------------------------------------------------- ~3,5 pages
 \section{Algorithmes}
